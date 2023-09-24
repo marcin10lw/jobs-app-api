@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import jobsRouter from "./routes/jobs.js";
 import authRouter from "./routes/auth.js";
+import notFoundMiddleware from "./middleware/not-found.js";
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", jobsRouter);
+app.use(notFoundMiddleware);
 
 const port = process.env.PORT || 2137;
 
