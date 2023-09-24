@@ -1,6 +1,7 @@
 import "express-async-errors";
 
 import Job from "../models/Job.js";
+import { BadRequestError, NotFoundError } from "../errors/errors.js";
 
 export const getAllJobs = async (req, res) => {
   const jobs = await Job.find({});
@@ -14,7 +15,7 @@ export const getSingleJob = async (req, res, next) => {
   const job = await Job.findById(id);
 
   if (!job) {
-    throw new Error(`No job with id: ${id}`);
+    throw new NotFoundError(`No job with id: ${id}`);
   }
 
   res.status(200).json({ job });
@@ -24,7 +25,7 @@ export const createJob = async (req, res) => {
   const { company, position } = req.body;
 
   if (!company || !position) {
-    return res.status(400).json({ msg: "Must provide company and position" });
+    throw new BadRequestError("Must provide company and position");
   }
 
   const job = await Job.create(req.body);
@@ -41,7 +42,7 @@ export const updateJob = async (req, res) => {
   });
 
   if (!job) {
-    return res.status(404).json({ msg: `No jobs with id: ${id}` });
+    throw new NotFoundError(`No job with id: ${id}`);
   }
 
   res.status(200).json({ job });
@@ -52,7 +53,7 @@ export const deleteJob = async (req, res) => {
 
   const job = await Job.findByIdAndDelete(id);
   if (!job) {
-    return res.status(404).json({ msg: `No jobs with id: ${id}` });
+    throw new NotFoundError(`No job with id: ${id}`);
   }
 
   res.status(200).json({ msg: `Deleted job with id: ${id}` });
