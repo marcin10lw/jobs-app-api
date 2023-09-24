@@ -4,8 +4,8 @@ import morgan from "morgan";
 import jobsRouter from "./routes/jobs.js";
 import authRouter from "./routes/auth.js";
 import notFoundMiddleware from "./middleware/not-found.js";
-import connectDB from "./db/connect.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
+import mongoose from "mongoose";
 import "express-async-errors";
 
 dotenv.config();
@@ -27,12 +27,13 @@ const port = process.env.PORT || 2137;
 
 const start = async () => {
   try {
-    await connectDB(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI);
     app.listen(port, () => {
       console.log(`Server running on port: ${port}`);
     });
   } catch (error) {
     console.error(error);
+    process.exit(1);
   }
 };
 
