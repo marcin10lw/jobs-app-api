@@ -29,6 +29,7 @@ const JobSchema = new mongoose.Schema(
     },
   },
   {
+    strictQuery: true,
     timestamps: true,
   }
 );
