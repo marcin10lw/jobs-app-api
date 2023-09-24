@@ -5,6 +5,8 @@ import jobsRouter from "./routes/jobs.js";
 import authRouter from "./routes/auth.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import connectDB from "./db/connect.js";
+import errorHandlerMiddleware from "./middleware/error-handler.js";
+import "express-async-errors";
 
 dotenv.config();
 const app = express();
@@ -14,9 +16,12 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(express.json());
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", jobsRouter);
+
 app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 2137;
 

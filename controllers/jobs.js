@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import "express-async-errors";
 
 let jobs = [
   { id: nanoid(), company: "apple", position: "front-end dev" },
@@ -9,12 +10,13 @@ export const getAllJobs = async (req, res) => {
   res.status(200).json({ jobs });
 };
 
-export const getSingleJob = async (req, res) => {
+export const getSingleJob = async (req, res, next) => {
   const { id } = req.params;
 
   const job = jobs.find((job) => job.id === id);
 
   if (!job) {
+    throw new Error("No job with that id");
     return res.status(404).json({ msg: `No job with id: ${id}` });
   }
 
