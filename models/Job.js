@@ -6,18 +6,18 @@ const JobSchema = new mongoose.Schema(
   {
     company: {
       type: String,
-      required: [true, "Must provide company"],
+      required: [true, "company is required"],
       trim: true,
     },
     position: {
       type: String,
-      required: [true, "Must provide position"],
+      required: [true, "position is required"],
       trim: true,
     },
     jobLocation: {
       type: String,
       trim: true,
-      default: "my city",
+      required: [true, "job location is required"],
     },
     jobStatus: {
       type: String,
