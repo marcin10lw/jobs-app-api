@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import jobsRouter from "./routes/jobs.js";
 import authRouter from "./routes/auth.js";
+import userRouter from "./routes/user.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import mongoose from "mongoose";
@@ -22,6 +23,7 @@ app.use(express.json());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authMiddleware, jobsRouter);
+app.use("/api/v1/user", authMiddleware, userRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
