@@ -1,3 +1,4 @@
+import "express-async-errors";
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -6,7 +7,6 @@ import authRouter from "./routes/auth.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import mongoose from "mongoose";
-import "express-async-errors";
 
 dotenv.config();
 const app = express();
