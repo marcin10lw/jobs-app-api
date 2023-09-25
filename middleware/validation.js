@@ -93,7 +93,7 @@ export const validateRegister = withValidationErrors([
       const existingUser = await User.findOne({ email });
 
       if (existingUser) {
-        throw new Error("This email is already in use");
+        throw new Error("this email is already in use");
       }
     }),
 
@@ -105,4 +105,15 @@ export const validateRegister = withValidationErrors([
     .withMessage("password must be at least 6 characters long"),
 
   body("location").trim().default("my city"),
+]);
+
+export const validateLogin = withValidationErrors([
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("email is required")
+    .isEmail()
+    .withMessage("invalid email"),
+
+  body("password").trim().notEmpty().withMessage("password is required"),
 ]);
