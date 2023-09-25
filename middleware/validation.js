@@ -56,13 +56,13 @@ export const validateIdParam = withValidationErrors([
     const isValidId = Types.ObjectId.isValid(id);
 
     if (!isValidId) {
-      throw new BadRequestError(`${id} is not valid mongodb id`);
+      throw new Error(`${id} is not valid mongodb id`);
     }
 
     const job = await Job.findById(id);
 
     if (!job) {
-      throw new NotFoundError(`no job with id:${id}`);
+      throw new Error(`no job with id:${id}`);
     }
   }),
 ]);
