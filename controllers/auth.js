@@ -26,6 +26,12 @@ export const login = async (req, res) => {
   }
 
   const token = await user.generateToken();
+  const oneDay = 1000 * 60 * 60 * 24;
 
-  res.status(StatusCodes.OK).json({ token });
+  res.cookie("token", token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + oneDay),
+    secure: process.env.NODE_ENV === "production",
+  });
+  res.status(StatusCodes.OK).json({ msg: "user logged in" });
 };

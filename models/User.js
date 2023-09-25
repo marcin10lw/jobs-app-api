@@ -52,10 +52,10 @@ UserSchema.method("generateToken", function () {
   const token = jwt.sign(
     {
       userId: this._id,
-      userName: this.name,
+      role: this.role,
     },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_LIFETIME }
+    { expiresIn: "1d" }
   );
 
   return token;
