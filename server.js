@@ -7,6 +7,8 @@ import authRouter from "./routes/auth.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import mongoose from "mongoose";
+import authMiddleware from "./middleware/auth.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -15,10 +17,11 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", jobsRouter);
+app.use("/api/v1/jobs", authMiddleware, jobsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
