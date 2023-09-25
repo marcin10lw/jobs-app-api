@@ -119,7 +119,7 @@ export const validateRegister = withValidationErrors([
     .isLength({ min: 6 })
     .withMessage("password must be at least 6 characters long"),
 
-  body("location").trim().default("my city"),
+  body("location").trim().notEmpty().withMessage("location is required"),
 ]);
 
 export const validateLogin = withValidationErrors([
@@ -131,4 +131,36 @@ export const validateLogin = withValidationErrors([
     .withMessage("invalid email"),
 
   body("password").trim().notEmpty().withMessage("password is required"),
+]);
+
+export const validateUpdateUser = withValidationErrors([
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("name is required")
+    .isLength({ min: 3, max: 30 })
+    .withMessage("name must be between 3 and 30 characters long"),
+
+  body("lastName")
+    .trim()
+    .notEmpty()
+    .withMessage("last name is required")
+    .isLength({ min: 2, max: 30 })
+    .withMessage("last name must be between 2 and 30 characters long"),
+
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("email is required")
+    .isEmail()
+    .withMessage("invalid email")
+    .custom(async (email, { req }) => {
+      const existingUser = await User.findOne({ email });
+
+      if (existingUser && existingUser._id.toString() !== req.user.userId) {
+        throw new Error("this email is already in use");
+      }
+    }),
+
+  body("location").trim().notEmpty().withMessage("location is required"),
 ]);

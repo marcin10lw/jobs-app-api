@@ -66,6 +66,12 @@ UserSchema.method("comparePasswords", async function (candidatePassword) {
   return isMatch;
 });
 
+UserSchema.method("toJSON", function () {
+  let obj = this.toObject();
+  delete obj.password;
+  return obj;
+});
+
 const User = mongoose.model("user", UserSchema);
 
 export default User;
