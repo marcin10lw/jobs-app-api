@@ -1,7 +1,11 @@
 import { Types } from "mongoose";
 import Job from "../models/Job.js";
 import { body, param, validationResult } from "express-validator";
-import { BadRequestError, NotFoundError } from "../errors/errors.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors/errors.js";
 import { JOB_STATUS, JOB_TYPE } from "../utils/constants.js";
 import User from "../models/User.js";
 
@@ -16,6 +20,11 @@ const withValidationErrors = (validateValues) => {
         if (errorMessages[0].startsWith("no job with id")) {
           throw new NotFoundError(errorMessages);
         }
+
+        if (errorMessages[0].startsWith("not authorized")) {
+          throw new UnauthorizedError(errorMessages);
+        }
+
         throw new BadRequestError(errorMessages);
       }
 
@@ -53,7 +62,7 @@ export const validateJobInput = withValidationErrors([
 ]);
 
 export const validateIdParam = withValidationErrors([
-  param("id").custom(async (id) => {
+  param("id").custom(async (id, { req }) => {
     const isValidId = Types.ObjectId.isValid(id);
 
     if (!isValidId) {
@@ -64,6 +73,12 @@ export const validateIdParam = withValidationErrors([
 
     if (!job) {
       throw new Error(`no job with id:${id}`);
+    }
+    const isAdmin = req.user.role === "admin";
+    const isOwner = req.user.userId === job.createdBy.toString();
+
+    if (!isOwner && !isAdmin) {
+      throw new Error("not authorized to modify this resource");
     }
   }),
 ]);

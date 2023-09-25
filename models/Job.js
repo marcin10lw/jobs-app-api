@@ -29,6 +29,11 @@ const JobSchema = new mongoose.Schema(
       enum: Object.values(JOB_TYPE),
       default: JOB_TYPE.FULL_TIME,
     },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   {
     strictQuery: true,
