@@ -7,8 +7,8 @@ import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
+import { authMiddleware } from "./middleware/auth.js";
 import mongoose from "mongoose";
-import authMiddleware from "./middleware/auth.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();

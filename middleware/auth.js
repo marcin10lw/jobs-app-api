@@ -1,8 +1,8 @@
-import { UnauthenticatedError } from "../errors/errors.js";
+import { UnauthenticatedError, UnauthorizedError } from "../errors/errors.js";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const authMiddleware = async (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
@@ -29,4 +29,12 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+export const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new UnauthorizedError("unauthorized to access this route");
+    }
+
+    next();
+  };
+};
