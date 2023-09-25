@@ -1,4 +1,5 @@
-import { body, validationResult } from "express-validator";
+import { Types } from "mongoose";
+import { body, param, validationResult } from "express-validator";
 import { BadRequestError } from "../errors/errors.js";
 import { JOB_STATUS, JOB_TYPE } from "../utils/constants.js";
 
@@ -38,10 +39,18 @@ export const validateJobInput = withValidationErrors([
   body("jobStatus")
     .default(JOB_STATUS.PENDING)
     .isIn(Object.values(JOB_STATUS))
-    .withMessage("invalid status value"),
+    .withMessage("invalid jobStatus value"),
 
   body("jobType")
     .default(JOB_TYPE.FULL_TIME)
     .isIn(Object.values(JOB_TYPE))
-    .withMessage("invalid title value"),
+    .withMessage("invalid jobType value"),
+]);
+
+export const validateIdParam = withValidationErrors([
+  param("id")
+    .custom((value) => {
+      return Types.ObjectId.isValid(value);
+    })
+    .withMessage("invalid mongodb id"),
 ]);
