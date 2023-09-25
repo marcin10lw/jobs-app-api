@@ -3,6 +3,7 @@ import Job from "../models/Job.js";
 import { body, param, validationResult } from "express-validator";
 import { BadRequestError, NotFoundError } from "../errors/errors.js";
 import { JOB_STATUS, JOB_TYPE } from "../utils/constants.js";
+import User from "../models/User.js";
 
 const withValidationErrors = (validateValues) => {
   return [
@@ -65,4 +66,43 @@ export const validateIdParam = withValidationErrors([
       throw new Error(`no job with id:${id}`);
     }
   }),
+]);
+
+export const validateRegister = withValidationErrors([
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("name is required")
+    .isLength({ min: 3, max: 30 })
+    .withMessage("name must be between 3 and 30 characters long"),
+
+  body("lastName")
+    .trim()
+    .notEmpty()
+    .withMessage("last name is required")
+    .isLength({ min: 2, max: 30 })
+    .withMessage("last name must be between 2 and 30 characters long"),
+
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("email is required")
+    .isEmail()
+    .withMessage("invalid email")
+    .custom(async (email) => {
+      const existingUser = await User.findOne({ email });
+
+      if (existingUser) {
+        throw new Error("This email is already in use");
+      }
+    }),
+
+  body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("password is required")
+    .isLength({ min: 6 })
+    .withMessage("password must be at least 6 characters long"),
+
+  body("location").trim().default("my city"),
 ]);
