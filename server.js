@@ -10,9 +10,17 @@ import errorHandlerMiddleware from "./middleware/error-handler.js";
 import { authMiddleware } from "./middleware/auth.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -20,6 +28,10 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.put("/api/v1/test", (req, res) => {
+  res.status(200).json({ msg: "test route" });
+});
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authMiddleware, jobsRouter);
