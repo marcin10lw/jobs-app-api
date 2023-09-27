@@ -22,16 +22,14 @@ app.use(
   })
 );
 
+// app.use(express.static("dist"));
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
 app.use(cookieParser());
 app.use(express.json());
-
-app.put("/api/v1/test", (req, res) => {
-  res.status(200).json({ msg: "test route" });
-});
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authMiddleware, jobsRouter);
