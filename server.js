@@ -11,6 +11,9 @@ import { authMiddleware } from "./middleware/auth.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 const app = express();
@@ -22,11 +25,19 @@ app.use(
   })
 );
 
-// app.use(express.static("dist"));
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use(express.static(path.resolve(__dirname, "./public")));
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 app.use(cookieParser());
 app.use(express.json());
