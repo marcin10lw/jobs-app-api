@@ -1,7 +1,9 @@
 import "express-async-errors";
+import dayjs from "dayjs";
 
 import Job from "../models/Job.js";
 import { StatusCodes } from "http-status-codes";
+import mongoose from "mongoose";
 
 export const getAllJobs = async (req, res) => {
   const { userId } = req.user;
@@ -49,4 +51,38 @@ export const deleteJob = async (req, res) => {
   const job = await Job.findOneAndDelete({ _id: id, createdBy: userId });
 
   res.status(StatusCodes.OK).json({ msg: `Deleted job with id: ${id}`, job });
+};
+
+export const showStats = async (req, res) => {
+  let stats = await Job.aggregate([
+    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } },
+    { $group: { _id: "$jobStatus", count: { $sum: 1 } } },
+  ]);
+
+  let defaultStats = {
+    pending: 0,
+    interview: 0,
+    declined: 0,
+  };
+
+  stats.forEach(({ _id, count }) => {
+    defaultStats[_id] = count;
+  });
+
+  let monthlyApplications = [
+    {
+      date: "May 23",
+      count: 12,
+    },
+    {
+      date: "Jun 23",
+      count: 12,
+    },
+    {
+      date: "Jul 23",
+      count: 12,
+    },
+  ];
+
+  res.status(StatusCodes.OK).json({ stats: defaultStats, monthlyApplications });
 };
