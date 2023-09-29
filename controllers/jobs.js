@@ -100,5 +100,5 @@ export const showStats = async (req, res) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ stats: defaultStats, newMonthlyApplications });
+    .json({ defaultStats, monthlyApplications: newMonthlyApplications });
 };
