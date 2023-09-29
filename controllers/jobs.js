@@ -5,8 +5,8 @@ import Job from "../models/Job.js";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 
-export const getAllJobs = async (req, res) => {
-  const { search, jobStatus, jobType, sort } = req.query;
+const getQueryObject = (req) => {
+  const { search, jobStatus, jobType } = req.query;
   const queryObject = {
     createdBy: req.user.userId,
   };
@@ -26,6 +26,12 @@ export const getAllJobs = async (req, res) => {
     queryObject.jobType = jobType;
   }
 
+  return queryObject;
+};
+
+export const getAllJobs = async (req, res) => {
+  const queryObject = getQueryObject(req);
+
   const sortOptions = {
     newest: "-createdAt",
     oldest: "createdAt",
@@ -33,11 +39,22 @@ export const getAllJobs = async (req, res) => {
     "z-a": "-position",
   };
 
-  const sortKey = sortOptions[sort] || sortOptions.newest;
+  const sortKey = sortOptions[req.query.sort] || sortOptions.newest;
 
-  const jobs = await Job.find(queryObject).sort(sortKey);
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = limit * (page - 1);
 
-  res.status(StatusCodes.OK).json({ jobs });
+  const jobs = await Job.find(queryObject)
+    .sort(sortKey)
+    .limit(limit)
+    .skip(skip);
+  const totalJobs = await Job.count(queryObject);
+  const numOfPages = Math.ceil(totalJobs / limit);
+
+  res
+    .status(StatusCodes.OK)
+    .json({ totalJobs, numOfPages, currentPage: page, jobs });
 };
 
 export const getSingleJob = async (req, res, next) => {
