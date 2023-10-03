@@ -29,8 +29,6 @@ export const updateUser = async (req, res) => {
     newUser.avatarPublicId = response.public_id;
   }
 
-  console.log(req.body);
-
   const oldUser = await User.findByIdAndUpdate(req.user.userId, newUser, {
     runValidators: true,
   });
