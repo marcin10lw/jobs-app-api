@@ -20,7 +20,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://marcin10lw.github.io/fullstack-jobs-app",
     credentials: true,
   })
 );
