@@ -17,7 +17,7 @@ export const authMiddleware = async (req, res, next) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(payload.userId).select("id role");
-    const isTestUser = user._id.toString() === "6516036e1bc0daf94463cfef";
+    const isTestUser = user._id.toString() === "651c11d621201bc767e7abb7";
 
     if (!user) {
       return res.status(404).json({ msg: "user does not exist" });
