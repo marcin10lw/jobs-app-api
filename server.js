@@ -14,6 +14,10 @@ import cors from "cors";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
+import swaggerUI from "swagger-ui-express";
+import { load } from "yamljs";
+
+const swaggerDocument = load("./swagger.yaml");
 
 dotenv.config();
 const app = express();
@@ -44,6 +48,11 @@ cloudinary.config({
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("<h1>jobs app API</h1><a href='/api-docs'>Documentation</a>");
+});
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authMiddleware, jobsRouter);

@@ -1,0 +1,321 @@
+openapi: 3.0.0
+info:
+  title: Jobs App API
+  contact: {}
+  version: "1.0"
+servers:
+  - url: https://jobs-api-dyvv.onrender.com/api/v1
+    variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      operationId: Register
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/registerrequest"
+                - example:
+                    name: John
+                    lastName: Doe
+                    email: john_doe@test.com
+                    location: random
+                    password: secret123!
+            example:
+              name: John
+              lastName: Doe
+              email: john_doe@test.com
+              location: random
+              password: secret123!
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/loginrequest"
+                - example:
+                    email: john_doe@test.com
+                    password: secret123!
+            example:
+              email: john_doe@test.com
+              password: secret123!
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /jobs:
+    get:
+      tags:
+        - Jobs
+      summary: Get All Jobs
+      operationId: GetAllJobs
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+        - Jobs
+      summary: Create Job
+      operationId: CreateJob
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/createjobrequest"
+                - example:
+                    company: bmw
+                    position: backend developer
+                    jobLocation: germany
+            example:
+              company: bmw
+              position: backend developer
+              jobLocation: germany
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /jobs/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The job ID
+    get:
+      tags:
+        - Jobs
+      summary: Get Single Job
+      operationId: GetSingleJob
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+    patch:
+      tags:
+        - Jobs
+      summary: Update Job
+      operationId: UpdateJob
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updatejobrequest"
+                - example:
+                    position: frontend developer
+                    company: ikea
+                    jobLocation: poland
+            example:
+              position: frontend developer
+              company: ikea
+              jobLocation: poland
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+
+    delete:
+      tags:
+        - Jobs
+      summary: Delete Job
+      operationId: DeleteJob
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /users/current-user:
+    get:
+      tags:
+        - Users
+      summary: Get Current User
+      operationId: GetCurrentUser
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /users/update-user:
+    patch:
+      tags:
+        - Users
+      summary: Update User
+      operationId: UpdateUser
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updateuserrequest"
+                - example:
+                    name: Johnny
+                    lastName: Doe
+                    email: john_doe@test.com
+                    location: germany
+            example:
+              name: Johnny
+              lastName: Doe
+              email: john_doe@test.com
+              location: germany
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    registerrequest:
+      title: registerrequest
+      required:
+        - name
+        - lastName
+        - email
+        - location
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        location:
+          type: string
+        password:
+          type: string
+      example:
+        name: John
+        lastName: Doe
+        email: john_doe@test.com
+        location: random
+        password: secret123!
+    loginrequest:
+      title: loginrequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: john_doe@test.com
+        password: secret123!
+    createjobrequest:
+      title: createjobrequest
+      required:
+        - company
+        - position
+        - jobLocation
+      type: object
+      properties:
+        company:
+          type: string
+        position:
+          type: string
+        jobLocation:
+          type: string
+      example:
+        company: bmw
+        position: backend developer
+        jobLocation: germany
+    updatejobrequest:
+      title: updatejobrequest
+      required:
+        - position
+        - company
+        - jobLocation
+      type: object
+      properties:
+        position:
+          type: string
+        company:
+          type: string
+        jobLocation:
+          type: string
+      example:
+        position: frontend developer
+        company: ikea
+        jobLocation: poland
+    updateuserrequest:
+      title: updateuserrequest
+      required:
+        - name
+        - lastName
+        - email
+        - location
+      type: object
+      properties:
+        name:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        location:
+          type: string
+      example:
+        name: Johnny
+        lastName: Doe
+        email: john_doe@test.com
+        location: germany
+  securitySchemes:
+    httpBasic:
+      type: http
+      scheme: basic
+security:
+  - httpBasic: []
+tags:
+  - name: Auth
+    description: ""
+  - name: Jobs
+    description: ""
+  - name: Users
+    description: ""

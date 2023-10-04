@@ -37,7 +37,7 @@ export const validateJobInput = withValidationErrors([
   body("company")
     .trim()
     .notEmpty()
-    .withMessage("name is required")
+    .withMessage("company is required")
     .isLength({ min: 2, max: 30 })
     .withMessage("company must be between 2 and 30 characters long"),
 
