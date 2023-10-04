@@ -20,7 +20,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://marcin10lw.github.io",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://marcin10lw.github.io"
+        : "http://localhost:5173",
     credentials: true,
   })
 );
